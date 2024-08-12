@@ -19,7 +19,7 @@ return {
           "html",
           "jsonls",
           "tsserver",
-          "dockerls"
+          "dockerls",
         }})
     end
   },
