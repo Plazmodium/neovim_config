@@ -20,7 +20,22 @@ return {
       "nvim-tree/nvim-web-devicons",
     },
     config = function()
-      require("nvim-tree").setup {}
+      require("nvim-tree").setup {
+        sort = {
+          sorter = "case_sensitive",
+        },
+        view = {
+          width = 40,
+        },
+        renderer = {
+          group_empty = true,
+          highlight_git = true,
+          icons = { show = { git = true } }
+        },
+        filters = {
+          dotfiles = false,
+        },
+      }
       vim.keymap.set('n', '<leader>n', ':NvimTreeToggle left<CR>', {})
     end,
   }

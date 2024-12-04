@@ -19,6 +19,21 @@ return {
           ["ui-select"] = {
             require("telescope.themes").get_dropdown { }
           }
+        },
+        defaults = {
+          vimrep_arguments = {
+            'rg',
+            '--color=never',
+            '--no-heading',
+            '--with-filename',
+            '--line-number',
+            '--column',
+            '--smart-case',
+            '--glob', '!node_modules/*',
+            '--glob', '!dist/*',
+            '--glob', '!.git/*',
+            '--glob', '*.ts'
+          }
         }
       }
       require("telescope").load_extension("ui-select")
