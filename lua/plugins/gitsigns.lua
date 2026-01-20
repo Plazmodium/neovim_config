@@ -44,7 +44,7 @@ return {
 				map("n", "<leader>gs", gs.stage_hunk, { desc = "Stage Hunk" })
 				map("n", "<leader>gr", gs.reset_hunk, { desc = "Reset Hunk" })
 				map("n", "<leader>gS", gs.stage_buffer, { desc = "Stage Buffer" })
-				map("n", "<leader>gu", gs.undo_stage_hunk, { desc = "Undo Stage Hunk" })
+				-- Note: undo_stage_hunk was deprecated, use stage_hunk on staged hunks instead
 				map("n", "<leader>gR", gs.reset_buffer, { desc = "Reset Buffer" })
 				map("n", "<leader>gp", gs.preview_hunk, { desc = "Preview Hunk" })
 				map("n", "<leader>gb", function()
@@ -55,7 +55,7 @@ return {
 				map("n", "<leader>gD", function()
 					gs.diffthis("~")
 				end, { desc = "Diff This ~" })
-				map("n", "<leader>td", gs.toggle_deleted, { desc = "Toggle Deleted" })
+				map("n", "<leader>td", gs.preview_hunk_inline, { desc = "Preview Hunk Inline" })
 
 				-- Text object
 				map({ "o", "x" }, "ig", ":<C-U>Gitsigns select_hunk<CR>")

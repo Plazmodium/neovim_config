@@ -11,6 +11,6 @@ return {
     "LazyGitFilterCurrentFile",
   },
   config = function()
-    vim.keymap.set('n', '<leader>gg', ':LazyGit', { noremap = true, silent = true })
+    vim.keymap.set('n', '<leader>gg', '<cmd>LazyGit<CR>', { noremap = true, silent = true, desc = "LazyGit" })
   end,
 }

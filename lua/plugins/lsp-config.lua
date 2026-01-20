@@ -21,8 +21,8 @@ return {
 					"jsonls",
 					"ts_ls",
 					"dockerls",
-					"emmet_ls", -- Add this for better HTML/CSS completion
-					"tailwindcss", -- Add this if you use Tailwind
+					"emmet_ls",
+					"tailwindcss",
 				},
 			})
 		end,
@@ -30,14 +30,26 @@ return {
 	{
 		"neovim/nvim-lspconfig",
 		config = function()
+			-- Diagnostic keymaps
 			vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, {})
 			vim.keymap.set("n", "]d", vim.diagnostic.goto_next, {})
 			vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, {})
 
-			-- ANGULAR
-			local lspconfig = require("lspconfig")
+			-- LSP keymaps
+			vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
+			vim.keymap.set("n", "gd", vim.lsp.buf.definition, {})
+			vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, {})
 
-			lspconfig.angularls.setup({
+			-- Get capabilities from cmp_nvim_lsp
+			local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+			-- Global LSP config (applies to all servers)
+			vim.lsp.config("*", {
+				capabilities = capabilities,
+			})
+
+			-- Angular LSP config
+			vim.lsp.config("angularls", {
 				cmd = {
 					"angular-language-server",
 					"--ngProbeLocations",
@@ -46,22 +58,12 @@ return {
 					vim.fn.stdpath("data") .. "/mason/packages/typescript-language-server",
 					"--stdio",
 				},
-				on_attach = function(client, bufnr)
-					-- Set up buffer-specific key mappings and options here
-					local buf_set_keymap = vim.api.nvim_buf_set_keymap
-					local opts = { noremap = true, silent = true }
-
-					buf_set_keymap(bufnr, "n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-					buf_set_keymap(bufnr, "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
-				end,
 				filetypes = { "typescript", "html", "typescriptreact", "typescript.tsx" },
-				root_dir = lspconfig.util.root_pattern("angular.json", "package.json"),
+				root_markers = { "angular.json", "package.json" },
 			})
 
-			-- HTML setup with enhanced capabilities
-			local capabilities = require("cmp_nvim_lsp").default_capabilities()
-			lspconfig.html.setup({
-				capabilities = capabilities,
+			-- HTML config
+			vim.lsp.config("html", {
 				filetypes = { "html", "templ" },
 				init_options = {
 					configurationSection = { "html", "css", "javascript" },
@@ -73,9 +75,8 @@ return {
 				},
 			})
 
-			-- CSS setup with enhanced capabilities
-			lspconfig.cssls.setup({
-				capabilities = capabilities,
+			-- CSS config
+			vim.lsp.config("cssls", {
 				settings = {
 					css = {
 						validate = true,
@@ -92,9 +93,8 @@ return {
 				},
 			})
 
-			-- Emmet setup
-			lspconfig.emmet_ls.setup({
-				capabilities = capabilities,
+			-- Emmet config
+			vim.lsp.config("emmet_ls", {
 				filetypes = {
 					"css",
 					"eruby",
@@ -111,39 +111,43 @@ return {
 				},
 			})
 
-			lspconfig.lua_ls.setup({})
-			lspconfig.ts_ls.setup({})
-			lspconfig.cssls.setup({})
-			lspconfig.cssmodules_ls.setup({})
-			lspconfig.css_variables.setup({})
-			lspconfig.html.setup({})
-			lspconfig.dockerls.setup({})
-
-			-- ESLint setup
-			lspconfig.eslint.setup({
+			-- ESLint config
+			vim.lsp.config("eslint", {
 				filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "vue", "css" },
-				root_dir = lspconfig.util.root_pattern(".eslintrc", ".eslintrc.json", ".eslintrc.js"),
+				root_markers = { ".eslintrc", ".eslintrc.json", ".eslintrc.js", "eslint.config.js" },
 			})
 
-			-- Key bindings for LSP actions
-			vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
-			vim.keymap.set("n", "gd", vim.lsp.buf.definition, {})
-			vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, {})
+			-- Enable all LSP servers
+			vim.lsp.enable({
+				"angularls",
+				"astro",
+				"cssls",
+				"cssmodules_ls",
+				"css_variables",
+				"dockerls",
+				"emmet_ls",
+				"eslint",
+				"html",
+				"jsonls",
+				"lua_ls",
+				"tailwindcss",
+				"ts_ls",
+			})
 		end,
 	},
 
 	-- Autocompletion plugins
 	{
-		"hrsh7th/nvim-cmp", -- Autocompletion plugin
+		"hrsh7th/nvim-cmp",
 		dependencies = {
-			"hrsh7th/cmp-nvim-lsp", -- LSP completion source for nvim-cmp
-			"hrsh7th/cmp-buffer", -- Buffer completion source
-			"hrsh7th/cmp-path", -- File path completion source
-			"hrsh7th/cmp-vsnip", -- Snippet completion source (optional)
-			"hrsh7th/vim-vsnip", -- Snippet engine (optional)
-			"L3MON4D3/LuaSnip", -- Add snippet support
-			"saadparwaiz1/cmp_luasnip", -- Add snippet completion
-			"rafamadriz/friendly-snippets", -- Add predefined snippets
+			"hrsh7th/cmp-nvim-lsp",
+			"hrsh7th/cmp-buffer",
+			"hrsh7th/cmp-path",
+			"hrsh7th/cmp-vsnip",
+			"hrsh7th/vim-vsnip",
+			"L3MON4D3/LuaSnip",
+			"saadparwaiz1/cmp_luasnip",
+			"rafamadriz/friendly-snippets",
 		},
 		config = function()
 			local cmp = require("cmp")
